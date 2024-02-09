@@ -8,7 +8,7 @@ Build Image:
 
 Toolbox Create:
 
-`toolbox create -c <NAME> -i $USER/<toolbx-foldername>`
+`toolbox create -c <container_name> -i $USER/<toolbx-foldername>`
 
 Now you can enter!
 
@@ -22,7 +22,7 @@ Description=Launch sshd in Fedora Toolbox
 
 [Service]
 Type=longrun
-ExecPre=/usr/bin/podman start fedora-toolbox-34
+ExecPre=/usr/bin/podman start <container_name>
 ExecStart=/usr/bin/toolbox run sudo /usr/sbin/sshd -D
 
 [Install]
