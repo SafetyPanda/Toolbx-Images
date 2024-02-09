@@ -1,0 +1,19 @@
+FROM registry.fedoraproject.org/fedora:39
+
+RUN rm /etc/rpm/macros.image-language-conf
+RUN sed -i '/tsflags=nodocs/d' /etc/dnf/dnf.conf
+
+RUN dnf -y swap coreutils-single coreutils-full
+RUN dnf -y swap glibc-minimal-langpack glibc-all-langpacks
+
+# Install extra packages
+COPY extra-packages /
+RUN dnf -y install $(<extra-packages)
+RUN rm /extra-packages
+
+RUN printf "Port 2222\nListenAddress localhost\nPermitEmptyPasswords yes\n" >> /etc/ssh/sshd_config \
+	&& /usr/libexec/openssh/sshd-keygen rsa \
+	&& /usr/libexec/openssh/sshd-keygen ecdsa \
+	&& /usr/libexec/openssh/sshd-keygen ed25519
+
+RUN dnf -y upgrade
